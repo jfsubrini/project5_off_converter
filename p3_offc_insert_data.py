@@ -41,7 +41,7 @@ for col in reader:
     category = col[6]
     nutrition_score = col[7]
     # SQL Queries to insert non duplicate data in the Category table.
-    sql = "INSERT IGNORE INTO Category (name) VALUES (%s)"  # Syntaxe pour éviter les injections SQL
+    sql = "INSERT IGNORE INTO Category (name) VALUES (%s)"  # Syntax to avoid SQL injections
     cur.execute(sql, (category))   # Execute de SQL command
     # SQL Queries to insert data in the Food table.
     sql = "INSERT INTO Food (category_id, name, brand, ingredients, nutrition_score,"\
@@ -87,15 +87,15 @@ for col in reader:
             sql = "SELECT id FROM Store WHERE name = %s"
             cur.execute(sql, (item))
             id_store = cur.fetchone()
-            sql = "SELECT id FROM Food WHERE name = %s"
-            cur.execute(sql, (col[1]))
+            sql = "SELECT id FROM Food WHERE name = %s and brand = %s"
+            cur.execute(sql, (col[1], col[2]))
             id_food = cur.fetchone()
             sql = "INSERT INTO Food_Store (food_id, store_id) VALUES (%s, %s)"
             cur.execute(sql, (id_food, id_store))
 print("\nTable Food_Store renseignée.")
 print("\nToutes les données de la base épurée de l'OPEN FOOD FACTS"\
 " ont été insérées avec succès dans toutes les tables de la base de données offc_db."\
-"\nVous pouvez maintenant lancer le programme principal.\n")
+"\nVous pouvez maintenant lancer le programme principal p4_off_converter.py.\n")
 
 file.close()  # Close the .csv file.
 

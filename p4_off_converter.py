@@ -3,10 +3,10 @@
 
 """
 #################### OpenFoodFacts Converter ####################
-#                                      							#
+#                                                               #
 # Expliquer le programme en anglais  dire qu'il faut faire      #
 # tourner les autres fichiers d'abord                           #
-#                           		                            #
+#                                                               #
 #################################################################
 
 Python's Scripts
@@ -30,7 +30,7 @@ def main():
     # Optional menu
     print('Veuillez choisir une des deux options suivantes (tapez 1 ou 2) :')
     option = input('1 - Vous souhaitez remplacer un aliment.\
-    	\n2 - Retrouvez vos aliments substitués.\n')
+        \n2 - Retrouvez vos aliments substitués.\n')
     while option != '1' and option != '2':
         option = input("Vous devez taper '1' ou '2'.\n")
     # Option to choose a food product.
@@ -52,7 +52,7 @@ def main():
         Queries.show_food(num_cat, num_page)
         select_food = input("\nSélectionnez votre aliment (entrez le n°) "\
             "ou accedées à d'autres choix (tapez 's') :\n")
-        # Displaying all the aliments by 20 items pages.
+        # Displaying all the aliments by 15 items by pages.
         while select_food == 's':
             num_page += 1
             Queries.show_food(num_cat, num_page)
@@ -61,27 +61,29 @@ def main():
         # Displaying the selected food with is name and nutrition_grade.
         Queries.show_selected(select_food)
         # Suggesting a substitute food product.
-        numb_choice = 0
-        Queries.show_substitute(num_cat, numb_choice)
-        # Suggesting to display another substitute food product.
-        ok_choice = input("\nCet aliment vous convient-il (tapez 'o') ou"\
-            " voulez-vous voir un autre choix (tapez 'n') ?\n")
+        num_choice = 0
         # Displaying all 1 substitute aliment by page.
+        ok_choice = 'n'
         while ok_choice == 'n':
-            numb_choice += 1
-            print("Je vous propose alors l'aliment suivant :\n")
-            Queries.show_substitute(num_cat, numb_choice)
-            ok_choice = input("\nCet aliment vous convient-il (tapez 'o') ou"\
-                " voulez-vous voir un autre choix (tapez 'n') ?\n")
-        # Stores where to buy this substitute food product.
-        print('\nTrès bien.\nJe vous indique que vous pouvez acheter '\
-            'cet aliment dans le(s) magasin(s) suivant(s):\n')
-        Queries.show_store()
-
+            num_choice += 1
+            query = Queries.show_substitute(num_cat, select_food, num_choice)
+            if query != "":
+                ok_choice = input("\nCet aliment vous convient-il (tapez 'o') ou"\
+                    " voulez-vous voir un autre choix (tapez 'n') ?\n")
+                # if ok_choice == 'o':
+                #     substitute_food = query
+                # elif ok_choice != 'o' and ok_choice != 's':
+                #     print("Veuillez taper 'o' ou 'n'.")
+            else:
+                print("Il n'y a pas d'autres aliments plus sain.")
+        # le ELSE ne marche pas !!!!
+        # Showing the store(s) where to buy this substitute food product.
+        # Queries.show_store(substitute_food)
         # # Suggesting to save this substitute food product in the user database.
         # saving_db = input("\nVoulez-vous maintenant enregistrer cet aliment"\
         # " dans votre base de données ? (tapez 'o' pour oui)\n")
         # if saving_db == 'o':
+        #     Queries.save_substitute(select_food, substitute_food)
         #     print("\nAliment de substitution enregistré dans votre base de données.\
         #         \nA bientôt dans l'Open Food Facts Converter.\n")
         # else:
@@ -89,30 +91,26 @@ def main():
 
     # Option to find a substitute food product in the user database.
     elif option == '2':
-        pass
-        # selected_food_db = input('\nVoici les aliments de votre base de données personnnelle.\
-        #     \nSélectionnez un aliment (entrez le n°) :\n')
-        # number_sf_db = 30
-        # while selected_food_db > number_sf_db:
-        #     selected_food_db = input(f'Vous devez taper un entier de 1 à {number_sf_db}.\n')
-        # print("Vous avez choisi l'aliment n°{}.".format(selected_food_db))
+        print('\nVoici les aliments de votre base de données personnnelle.')
+        # Chosing the food product in the database.
+        num_my_page = 0
+        Queries.source_food_db(num_my_page)
+        source_food = input("\nSélectionnez un aliment (entrez le n°) "\
+            "ou accedées à d'autres choix (tapez 's') :\n")
+        # Displaying all the aliments by 15 items by pages.
+        while source_food == 's':
+            num_my_page += 1
+            Queries.source_food_db(num_my_page)
+            source_food = input("\nSélectionnez votre aliment (entrez le n°) "\
+            "ou accedées à d'autres choix (tapez 's') :\n")
+        # Displaying the selected substitute food for that selected food in the user database.
+        Queries.substitute_food_db(source_food)
+    print('Merci pour votre visite. A bientôt...')
 
 # To be standalone
 if __name__ == "__main__":
     main()
 
-
-# SELECT Category.name
-# FROM Category
-# INNER JOIN Food
-#     ON Category.id = Food.category_id
-# WHERE Food.id = num_cat;
-
-# sql = "SELECT Food.id, Food.category_id, Food.name, Food.brand"
-# FROM Food
-# INNER JOIN Category
-#     ON Category.id = Food.category_id
-# WHERE category.id = {}".format(num_cat)"
 
 # Nombre de produits par catégorie :
 # SELECT COUNT(sur la PK) AS num_products
