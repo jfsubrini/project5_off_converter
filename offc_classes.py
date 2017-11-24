@@ -45,7 +45,7 @@ class Queries:
         """ Query that seek in the selected category the substitute aliment
         that has better nutrition_grade and nutrition_score
         than the ones of the selected aliment """
-        sql = "SELECT name, brand, ingredients, nutrition_score, nutrition_grade, url"
+        sql = "SELECT id, name, brand, ingredients, nutrition_score, nutrition_grade, url"
         sql += " FROM Food WHERE category_id =" + str(num_cat)
         sql += " AND nutrition_score < ("
         sql += "SELECT nutrition_score FROM Food WHERE id =" + str(select_food)
@@ -55,7 +55,11 @@ class Queries:
 
     def show_store(substitute_food):
         """ Query that seek the store(s) where one can buy the selected substitute aliment. """
-        sql = "SELECT store_id FROM Food_Store WHERE food_id =" + str(substitute_food)
+        sql = "SELECT s.name"
+        sql += " FROM Store AS s"
+        sql += " INNER JOIN Food_Store AS fs"
+        sql += " ON s.id = fs.store_id"
+        sql += " WHERE fs.food_id =" + str(substitute_food)
         Result.store(sql)
 
     def save_substitute(select_food, substitute_food):
@@ -64,14 +68,14 @@ class Queries:
         Connect.CUR.execute(sql, (select_food, substitute_food))
 
     def source_food_db(num_my_page):
-        """ Query that seek the name, brand and nutrition_grade
+        """ Query that seek the id, name, brand and nutrition_grade
         of all the aliment in the user database """
-        sql = "SELECT f.name, f.brand, f.nutrition_grade"
+        sql = "SELECT f.id, f.name, f.brand, f.nutrition_grade"
         sql += " FROM Food AS f"
         sql += " INNER JOIN HealthyFood AS h"
         sql += " ON f.id = h.source_id"
         sql += " ORDER BY name, brand, nutrition_grade"
-        sql += " LIMIT " + str(num_my_page * 15) + ", 15"
+        sql += " LIMIT " + str(num_my_page * 10) + ", 10"
         Result.source_db(sql)
 
     def substitute_food_db(source_food):
@@ -80,7 +84,8 @@ class Queries:
         sql = "SELECT f.name, f.brand, f.nutrition_grade"
         sql += " FROM Food AS f"
         sql += " INNER JOIN HealthyFood AS h"
-        sql += " ON f.id = h." + source_food
+        sql += " ON f.id = h.substitute_id"
+        sql += " WHERE h.source_id =" + str(source_food)
         Result.substitute_db(sql)
 
 
@@ -123,8 +128,10 @@ class Result:
         Connect.CUR.execute(sql)
         print('\nTrès bien.\nVous pouvez acheter '\
             'cet aliment dans le(s) magasin(s) suivant(s):\n')
-        for record in Connect.CUR:   #CONVERTIR ID STORE EN NOM EN ENLEVANT LES DOUBLONS
-            print(record)
+        for record in Connect.CUR:
+            print("".join(record))
+            # if record == "":
+            #     print("Il n'y a pas de magasin renseigné dans la base.")
 
     def source_db(sql):
         """ Show all the selected food present in the user database. """
