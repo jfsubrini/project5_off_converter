@@ -4,12 +4,13 @@ with the right columns, primary keys, foreign keys and table engines.
 
 """
 
-# Import the PyMySQL package to connect Python with MySQL.
+# Import the PyMySQL package, the Python MySQL client librairy.
 import pymysql.cursors
 
 
 class Connect:
-    """ Connection to the offc_db database with my username. """
+    """ Connection to the offc_db database with my username and autocommit option. 
+    Prepare a cursor object using cursor() method. """
 
     CONNECTION = pymysql.connect(
         host="localhost",
@@ -19,6 +20,22 @@ class Connect:
         charset='utf8mb4',
         autocommit=True)
     CUR = CONNECTION.cursor()
+
+
+class Constant:
+    """ Query that collect in a list all the id in Category """
+    cat_list = []
+    sql = "SELECT id FROM Category"
+    Connect.CUR.execute(sql)
+    for record in Connect.CUR:
+        cat_list.append(record)
+
+    """ Query that collect in a list all the source_id in HealthyFood """
+    source_id_list = []
+    sql = "SELECT DISTINCT source_id FROM HealthyFood"
+    Connect.CUR.execute(sql)
+    for record in Connect.CUR:
+        source_id_list.append(record)
 
 
 class Queries:
@@ -77,7 +94,7 @@ class Queries:
         sql += " ORDER BY name, brand, nutrition_grade"
         sql += " LIMIT " + str(num_my_page * 10) + ", 10"
         Result.source_db(sql)
-
+    
     def substitute_food_db(source_food):
         """ Query that seek in the selected substitute aliment
         for the selected food in the user database. """
@@ -114,12 +131,13 @@ class Result:
         Connect.CUR.execute(sql)
         print("\nL'aliment que vous avez choisi est :")
         for record in Connect.CUR:
-            print(" avec le score nutritionnel suivant : ".join(record))
+            print(" avec le niveau nutritionnel suivant : ".join(record))
 
     def substitute(sql):
         """ Show the result of the query looking for the substitute aliments. """
         Connect.CUR.execute(sql)
-        print("\nJe vous propose de le remplacer par l'aliment suivant :\n")
+        print("\nJe vous propose de le remplacer par l'aliment suivant :\n"\
+            "(n°, name, marque, ingredients, score nutritionnel, niveau nutritionnel, url)\n")
         for record in Connect.CUR:
             print(record)
 
@@ -142,6 +160,7 @@ class Result:
     def substitute_db(sql):
         """ Show the selected substitute food in the user database. """
         Connect.CUR.execute(sql)
-        print("\nVous avez sélectionné cet aliment de substitution :\n")
+        print("\nVous avez sélectionné cet aliment de substitution :\n"\
+            "(nom, marque, niveau nutritionnel)\n")
         for record in Connect.CUR:
             print(record)

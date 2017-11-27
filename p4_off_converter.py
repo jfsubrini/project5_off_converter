@@ -2,21 +2,28 @@
 # -*- coding: utf-8 -*-
 
 """
-#################### OpenFoodFacts Converter ####################
-#                                                               #
-# Expliquer le programme en anglais  dire qu'il faut faire      #
-# tourner les autres fichiers d'abord                           #
-#                                                               #
-#################################################################
+#################### OpenFoodFacts Converter #############################
+#                                                                        #
+# This program gives to the user some substitute type of aliments        #
+# for a given food, with better nutrition score and the place to buy it. #
+# It's also possible for the user to store substitute aliments,          #
+# in order to look for it latter.                                        #
+#                                                                        #
+# To run this program one must run these 3 modules in order :            #
+#                              p1_offc_db_creation.py                    #
+#                              p2_offc_tables_creation.py                #
+#                              p3_offc_insert_data.py                    #
+#                                                                        #
+##########################################################################
 
-Python's Scripts
-Files : off.myfile.csv
+File with Open Food Facts data : off.myfile.csv
+Other script : offc_classes.py
 
-Copyright Jean-François Subrini, student DA Python at OpenClassrooms, 14/10/2017.
+Copyright Jean-François Subrini, student DA Python at OpenClassrooms, 25/11/2017.
 
 """
 
-# Import the PyMySQL package to connect Python with MySQL.
+# Import the PyMySQL package, the Python MySQL client librairy.
 import pymysql.cursors
 
 # Importation of the class file
@@ -25,28 +32,30 @@ from offc_classes import *
 
 def main():
     """ Program wrapper """
-    # Welcoming message
+    # Welcoming message and optional menu
     print("\nBONJOUR, BIENVENUE SUR L'OPEN FOOD FACTS CONVERTER\n")
-    # Optional menu
     print('Veuillez choisir une des deux options suivantes (tapez 1 ou 2) :')
-    option = input('1 - Vous souhaitez remplacer un aliment.\
+    option = input('1 - Vous souhaitez trouver un aliment de substitution.\
         \n2 - Retrouvez vos aliments substitués.\n')
     while option != '1' and option != '2':
         option = input("Vous devez taper '1' ou '2'.\n")
-    # Option to choose a food product.
+    
+    # Option to choose a food product to find a substitute aliment.
     if option == '1':
         # Displaying all the 10 categories with the query.
-        print('\nVoici les différentes catégories présentes dans notre base de données :\n')
+        print('\nVoici les différentes catégories présentes dans notre base de données :\n'\
+            '(n°, nom)\n')
         Queries.show_category()
         # Chosing the right category of your food product.
+        # while 1:
         num_cat = input('\nSélectionnez la catégorie de votre aliment (entrez le n°) :\n')
-        # while num_cat != '1' or num_cat != '1057' or num_cat != '1949' or num_cat != '2135'\
-        #  or num_cat != '2444' or num_cat != '3813' or num_cat != '4166' or num_cat != '5843'\
-        #   or num_cat != '6215' or num_cat != '6963':
-        #     num_cat = input('Vous devez taper un des numéros de catégories ci-dessus.\n')
-        print('Vous avez choisi la catégorie n°{}.\n'.format(num_cat))
+        #     for num in Constant.cat_list:
+        #         print(Constant.cat_list, type(Constant.cat_list))
+        #         if num == num_cat:
+        #             break
         # Displaying the food from this category.
-        print('\nVoici les aliments présents dans cette catégorie :\n')
+        print('\nVoici les aliments présents dans cette catégorie :\n'\
+            '(n°, nom, marque)\n')
         # Chosing the right food product in the selected category.
         num_page = 0
         Queries.show_food(num_cat, num_page)
@@ -84,15 +93,16 @@ def main():
             " dans votre base de données ? (tapez 'o' pour oui)\n")
         if saving_db == 'o':
             Queries.save_substitute(select_food, substitute_food)
-            print("\nAliment de substitution enregistré dans votre base de données.\
-                \nA bientôt dans l'Open Food Facts Converter.\n")
+            print("\nAliment de substitution enregistré dans votre base de données.\n"\
+                "\nA bientôt dans l'Open Food Facts Converter.\n")
         else:
             print("\nPas de problème. A bientôt dans l'Open Food Facts Converter.\n")
 
     # Option to find a substitute food product in the user database.
     elif option == '2':
-        print('\nVoici les aliments de votre base de données personnnelle :')
-        # Chosing the food product in the database.
+        print('\nVoici les aliments de votre base de données personnnelle :\n'\
+            '(n°, nom, marque, niveau nutritionnel)\n')
+        # Displaying the food product(s) from the database and choising one.
         num_my_page = 0
         Queries.source_food_db(num_my_page)
         source_food = input("\nSélectionnez un aliment (entrez le n°) "\
@@ -101,24 +111,16 @@ def main():
         while source_food == 's':
             num_my_page += 1
             Queries.source_food_db(num_my_page)
-            source_food = input("\nSélectionnez votre aliment (entrez le n°) "\
+            source_food = input("\nSélectionnez un aliment (entrez le n°) "\
             "ou accedées à d'autres choix (tapez 's') :\n")
+        # Controlling the input
+        # while source_food != Constant.source_id_list:
+            # source_food = input("\nSélectionnez un aliment (entrez le n°) "\
+            # "ou accedées à d'autres choix (tapez 's') :\n")
         # Displaying the selected substitute food for that selected food in the user database.
         Queries.substitute_food_db(source_food)
-    print('\nMerci pour votre visite et à très bientôt...\n')
+        print("")
 
 # To be standalone
 if __name__ == "__main__":
     main()
-
-# Nombre de produits par catégorie :
-# SELECT COUNT(sur la PK) AS num_products
-# FROM Food
-# WHERE category_id = num_cat
-# GROUP BY id;
-
-# Nombre de produits pour les différents grade :
-# SELECT nutrition_grade COUNT(*) AS num_nutri_grade
-# FROM Food
-# WHERE category_id = num_cat
-# GROUP BY nutrition_grade;
