@@ -4,12 +4,12 @@ with the right columns, primary keys, foreign keys and table engines.
 
 """
 
-# Import the PyMySQL package, the Python MySQL client librairy.
+# Import the PyMySQL package, the Python MySQL client library.
 import pymysql.cursors
 
 
 class Connect:
-    """ Connection to the offc_db database with my username and autocommit option. 
+    """ Connection to the offc_db database with my username and autocommit option.
     Prepare a cursor object using cursor() method. """
 
     CONNECTION = pymysql.connect(
@@ -24,11 +24,13 @@ class Connect:
 
 class Constant:
     """ Query that collect in a list all the id in Category """
-    cat_list = []
+    cat_dict = {}
     sql = "SELECT id FROM Category"
     Connect.CUR.execute(sql)
+    i = 1
     for record in Connect.CUR:
-        cat_list.append(record)
+        cat_dict[i] = record
+        i += 1
 
     """ Query that collect in a list all the source_id in HealthyFood """
     source_id_list = []
@@ -47,21 +49,21 @@ class Queries:
         Result.category(sql)
 
     def show_food(num_cat, num_page):
-        """ Query that seek the name and brand of all the aliment of the selected category """
+        """ Query that seek the name and brand of all the food of the selected category """
         sql = "SELECT id, name, brand FROM Food WHERE category_id =" + str(num_cat)
         sql += " ORDER BY name, brand"
         sql += " LIMIT " + str(num_page * 15) + ", 15"
         Result.food(sql)
 
     def show_selected(select_food):
-        """ Query that seek the name and nutrition_grade of the selected aliment """
+        """ Query that seek the name and nutrition_grade of the selected food """
         sql = "SELECT name, nutrition_grade FROM Food WHERE id =" + str(select_food)
         Result.selection(sql)
 
     def show_substitute(num_cat, select_food, num_choice):
-        """ Query that seek in the selected category the substitute aliment
+        """ Query that seek in the selected category the substitute food
         that has better nutrition_grade and nutrition_score
-        than the ones of the selected aliment """
+        than the ones of the selected food """
         sql = "SELECT id, name, brand, ingredients, nutrition_score, nutrition_grade, url"
         sql += " FROM Food WHERE category_id =" + str(num_cat)
         sql += " AND nutrition_score < ("
@@ -71,7 +73,7 @@ class Queries:
         Result.substitute(sql)
 
     def show_store(substitute_food):
-        """ Query that seek the store(s) where one can buy the selected substitute aliment. """
+        """ Query that seek the store(s) where one can buy the selected substitute food. """
         sql = "SELECT s.name"
         sql += " FROM Store AS s"
         sql += " INNER JOIN Food_Store AS fs"
@@ -80,13 +82,13 @@ class Queries:
         Result.store(sql)
 
     def save_substitute(select_food, substitute_food):
-        """ Query that save the selected substitute aliment in the user database. """
+        """ Query that save the selected substitute food in the user database. """
         sql = "INSERT INTO HealthyFood (source_id, substitute_id) VALUES (%s, %s)"
         Connect.CUR.execute(sql, (select_food, substitute_food))
 
     def source_food_db(num_my_page):
         """ Query that seek the id, name, brand and nutrition_grade
-        of all the aliment in the user database """
+        of all the food in the user database """
         sql = "SELECT f.id, f.name, f.brand, f.nutrition_grade"
         sql += " FROM Food AS f"
         sql += " INNER JOIN HealthyFood AS h"
@@ -94,10 +96,10 @@ class Queries:
         sql += " ORDER BY name, brand, nutrition_grade"
         sql += " LIMIT " + str(num_my_page * 10) + ", 10"
         Result.source_db(sql)
-    
+
     def substitute_food_db(source_food):
-        """ Query that seek in the selected substitute aliment
-        for the selected food in the user database. """
+        """ Query that seek in the selected substitute food
+        for the selected one in the user database. """
         sql = "SELECT f.name, f.brand, f.nutrition_grade"
         sql += " FROM Food AS f"
         sql += " INNER JOIN HealthyFood AS h"
@@ -120,21 +122,21 @@ class Result:
             # i += 1
 
     def food(sql):
-        """ Show the result of the query looking for the aliments in the chosen category. """
+        """ Show the result of the query looking for the food in the chosen category. """
         Connect.CUR.execute(sql)
         for record in Connect.CUR:
             print(record)
 
     def selection(sql):
         """ Show the result of the query looking for the nutrition_grade
-        for the selected aliment. """
+        for the selected food. """
         Connect.CUR.execute(sql)
         print("\nL'aliment que vous avez choisi est :")
         for record in Connect.CUR:
             print(" avec le niveau nutritionnel suivant : ".join(record))
 
     def substitute(sql):
-        """ Show the result of the query looking for the substitute aliments. """
+        """ Show the result of the query looking for the substitute food. """
         Connect.CUR.execute(sql)
         print("\nJe vous propose de le remplacer par l'aliment suivant :\n"\
             "(n°, name, marque, ingredients, score nutritionnel, niveau nutritionnel, url)\n")
@@ -142,7 +144,7 @@ class Result:
             print(record)
 
     def store(sql):
-        """ Show the store(s) where to buy the substitute selected aliment, if any. """
+        """ Show the store(s) where to buy the substitute selected food, if any. """
         Connect.CUR.execute(sql)
         print('\nTrès bien.\nVous pouvez acheter '\
             'cet aliment dans le(s) magasin(s) suivant(s):\n')

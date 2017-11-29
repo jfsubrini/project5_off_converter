@@ -2,19 +2,15 @@
 # -*- coding: utf-8 -*-
 
 """
-Third module : To insert the data in the tables of the offc_db database
-with the data of the off_myfile.csv (8 columns, 7263 items ????????????????, 3.5 MO) file
-for 10 food categories.
-###########
-##########
-#######
-
+Third module : To insert the data into the tables of the offc_db database,
+with the data of the off_myfile.csv file (8 columns, 7289 lines, 3.6 MO),
+from 10 food categories.
 """
 
 # Import the csv module to read and write data in csv format.
 import csv
 
-# Import the PyMySQL package, the Python MySQL client librairy.
+# Import the PyMySQL package, the Python MySQL client library.
 import pymysql.cursors
 
 # Connection to the offc_db database with my username and autocommit option.
@@ -57,10 +53,8 @@ for col in reader:
 print("\nTables Category et Food renseignées.")
 
 #### Store table ####
-# Opening and reading the .csv file with all the selected data from the Open Food Facts base.
-f_name = "off_myfile.csv"
-file = open(f_name, newline='', mode='r')
-reader = csv.reader(file, delimiter='\t')
+# Opening and reading the off_myfile.csv from the beginning.
+file.seek(0)
 # Retrieving each different store name presents in the off_myfile.csv file,
 # with some string formating, and creating a store_list to put in.
 store_list = []
@@ -79,10 +73,8 @@ for label in store_list:
 print("\nTable Store renseignée.")
 
 #### Food_Store table ####
-# Opening and reading the .csv file with all the selected data from the Open Food Facts base.
-f_name = "off_myfile.csv"
-file = open(f_name, newline='', mode='r')
-reader = csv.reader(file, delimiter='\t')
+# Opening and reading the off_myfile.csv from the beginning.
+file.seek(0)
 print("\nInsertion des données dans la table de composition Food_Store en cours...")
 # SQL Queries to insert data into the Food_Store table.
 # Using some string formating in order to separate each store name from the other.

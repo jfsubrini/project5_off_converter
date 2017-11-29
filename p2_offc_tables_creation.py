@@ -7,7 +7,7 @@ with the columns, primary keys, foreign keys and table engines.
 
 """
 
-# Import the PyMySQL package, the Python MySQL client librairy.
+# Import the PyMySQL package, the Python MySQL client library.
 import pymysql.cursors
 
 

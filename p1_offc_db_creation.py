@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*-
 
 """
-First module : To create the Open Food Facts Convertor Database
+First module : To create the OpenFoodFacts Convertor Database
 
 """
 
-# Import the PyMySQL package, the Python MySQL client librairy.
+# Import the PyMySQL package, the Python MySQL client library.
 import pymysql.cursors
 
 
