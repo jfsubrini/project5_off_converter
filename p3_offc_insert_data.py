@@ -5,6 +5,7 @@
 Third module : To insert the data into the tables of the offc_db database,
 with the data of the off_myfile.csv file (8 columns, 7289 lines, 3.6 MO),
 from 10 food categories.
+
 """
 
 # Import the csv module to read and write data in csv format.
