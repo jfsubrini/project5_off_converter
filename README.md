@@ -32,7 +32,7 @@ The user must pick one and the program shows the name, brand and nutrition grade
 
 All the data used in this program come from the « OpenFoodFacts - France » website [](https://fr.openfoodfacts.org).
 This huge database was imported from [](https://fr.openfoodfacts.org/data) and the .csv file that holds all the data is : *fr.openfoodfacts.org.products.csv*
-This file was 1,14 Go big the 25/11/2017, present version in this repository, with 163 columns and 380 790 food products.
+This file was 1,14 Go big the 25/11/2017, with 163 columns and 380 790 food products.
 
 The first part of this program cleans this database to create a new one, *off_myfile.csv*, smaller and more relevant for this program.
 
@@ -51,16 +51,16 @@ pip
 MySQL
 PyMySQL
 
-For the data, in this repository you can find the *fr.openfoodfacts.org.products.csv* file (25/11/2017 version) from the OpenFoodFacts website but one can update it going to : [](https://fr.openfoodfacts.org/data) and load the last *fr.openfoodfacts.org.products.csv* file version.
+For the data, *fr.openfoodfacts.org.products.csv* file (25/11/2017 version) from the OpenFoodFacts website was used to create the *off_myfile.csv* file, but one can update it going to : [](https://fr.openfoodfacts.org/data) and loading the last *fr.openfoodfacts.org.products.csv* file version.
 
 
 ## How to use it or get it running ?
 
 **To run this program the first time, one must run these 4 modules in this same order** :
         1. **p0_clean_csv.py**                      *(to create a clean .csv file)*
-        2. **p1_offc_db_creation.py**           *(to create the database)*
-        3. **p2_offc_tables_creation.py**     *(to create the tables)*
-        4. **p3_offc_insert_data.py**            *(to insert data into tables)*
+        2. **p1_offc_db_creation.py**               *(to create the database)*
+        3. **p2_offc_tables_creation.py**           *(to create the tables)*
+        4. **p3_offc_insert_data.py**               *(to insert data into tables)*
 
 **Be careful not to run p3_offc_insert_data.py more than once**.
 If so, run again p1, p2 and p3 (once this time !).
