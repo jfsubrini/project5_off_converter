@@ -30,7 +30,7 @@ The user must pick one and the program shows the name, brand and nutrition grade
 
 ## Where the data come from and how were they selected ?
 
-All the data used in this program come from the [OpenFoodFacts - France](https://fr.openfoodfacts.org) website.
+All the data used in this program come from the [Open Food Facts - France](https://fr.openfoodfacts.org) website.
 This huge database was imported from [here](https://fr.openfoodfacts.org/data) and the .csv file that holds all the data is : *fr.openfoodfacts.org.products.csv*
 This file was 1,14 Go big the 25/11/2017, with 163 columns and 380 790 food products.
 
@@ -60,10 +60,10 @@ For the data, *fr.openfoodfacts.org.products.csv* file (25/11/2017 version) from
 
 **To run this program the first time, one must run these 4 modules in this same order** :
 
-    1. **p0_clean_csv.py**  *(to create a clean .csv file)*
-    2. **p1_offc_db_creation.py**  *(to create the database)*
-    3. **p2_offc_tables_creation.py**  *(to create the tables)*
-    4. **p3_offc_insert_data.py**  *(to insert data into tables)*
+1. **p0_clean_csv.py**  *(to create a clean .csv file)*
+2. **p1_offc_db_creation.py**  *(to create the database)*
+3. **p2_offc_tables_creation.py**  *(to create the tables)*
+4. **p3_offc_insert_data.py**  *(to insert data into tables)*
 
 **Be careful not to run p3_offc_insert_data.py more than once**.
 If so, run again p1, p2 and p3 (once this time !).
