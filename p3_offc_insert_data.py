@@ -76,7 +76,7 @@ print("\nTable Store renseignée.")
 #### Food_Store table ####
 # Opening and reading the off_myfile.csv from the beginning.
 file.seek(0)
-print("\nInsertion des données dans la table de composition Food_Store en cours...")
+print("\nInsertion des données dans la table Food_Store en cours...")
 # SQL Queries to insert data into the Food_Store table.
 # Using some string formating in order to separate each store name from the other.
 for col in reader:

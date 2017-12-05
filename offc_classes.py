@@ -51,7 +51,7 @@ class List:
         sql += " WHERE category_id =" + str(real_num_cat)
         sql += " AND nutrition_score < ("
         sql += "SELECT nutrition_score FROM Food WHERE id =" + str(real_select_food)
-        sql += ") ORDER BY nutrition_grade, nutrition_score"
+        sql += ") ORDER BY nutrition_grade, nutrition_score, brand"
         Connect.CUR.execute(sql)
         for record in Connect.CUR:
             substitute_list.append(record[0])
@@ -95,7 +95,7 @@ class Queries:
         sql += " FROM Food WHERE category_id =" + str(real_num_cat)
         sql += " AND nutrition_score < ("
         sql += "SELECT nutrition_score FROM Food WHERE id =" + str(real_select_food)
-        sql += ") ORDER BY nutrition_grade, nutrition_score"
+        sql += ") ORDER BY nutrition_grade, nutrition_score, brand"
         sql += " LIMIT " + str(num_choice) + ", 1"
         Result.substitute(sql)
 
